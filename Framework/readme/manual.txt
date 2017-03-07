@@ -1,0 +1,46 @@
+// ===========================================
+// 新規
+// ===========================================
+$obj = App_Xxx::newModel();
+
+//[2]
+$obj->hoge = 'page';
+$obj->setHoge('page');
+
+$schemas = array(
+    'hoge'   => 'page',
+    'params' => array(
+        'aaa' => 'AAA',
+        'bbb' => 'BBB'
+    )
+);
+
+$obj->setSchemas($schemas);
+
+$params = array(
+    'aaa' => 'AAA',
+    'bbb' => 'BBB'
+);
+$obj->setParams($params);
+
+// 既存のparamsに追加
+$obj->addParams();
+
+$obj->getJsonParams();  // $ojbj->json_params;
+$obj->setJsonParams([JSON]);  // $obj->json_params = [JSON];
+
+// 与えられた配列で作成
+$obj->create($schemas);
+
+// 設定されているプロパティで作成
+$obj->create();
+
+// ===========================================
+// 更新
+// ===========================================
+$id = n;
+$obj = App_Xxx::getInstance($id);
+
+//
+
+
