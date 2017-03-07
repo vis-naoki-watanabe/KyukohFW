@@ -40,7 +40,10 @@ class Framework_Base_Router
     {
         $params = $this->_sub_dir;
         $params[] = $this->_controller;
-        return ucwords(implode('_', $params), '_').($suffix?'Controller':'');
+        foreach($params as &$param) {
+            $param = ucwords($param);
+        }
+        return implode('_', $params).($suffix?'Controller':'');
     }
     
     // }}}
