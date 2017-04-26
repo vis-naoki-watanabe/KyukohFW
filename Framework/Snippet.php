@@ -25,6 +25,8 @@ class Framework_Snippet
         protected $begin_ = false;
         protected $end_   = "";
 
+        protected $id_ = 0; 
+        
 	// {{{ public static function &getInstance( $name )
 
 	/**
@@ -34,16 +36,26 @@ class Framework_Snippet
 	 */
 	public static function &getInstance( $name )
 	{
+            App::debug("snippet:{$name}");
 		if ( ! isset( self::$snippet[$name] ) ) {
-			self::$snippet[$name] = new self( $name );
+                    self::$snippet[$name] = new self( $name );
 		}
+                else {
+                    self::$snippet[$name]->id_++;                    
+                }
 		$snpt = self::$snippet[$name];
+                
 		$snpt->reset();
 		//$snpt->setColor( 'default' );
 		return $snpt;
 	}
 
 	// }}}
+        
+        public function isFirst()
+        {
+            return $this->id_ === 0;
+        }
 
 	// {{{ public static function &getNewInstance( $name )
 
@@ -94,30 +106,30 @@ class Framework_Snippet
 	 */
 	protected function __construct( $name )
 	{
-		$this->setTemplate( $name );
-		$this->name_ = $name;
+            $this->setTemplate( $name );
+            $this->name_ = $name;
 
-		/*if ( S::hasCtnr('snippet_maps') ) {
-			$maps = S::getCtnr('snippet_maps');
-			$this->color_map_  = $maps['color'];
-			$this->fcolor_map_ = $maps['fcolor'];
-			$this->fsize_map_  = $maps['fsize'];
-			$this->css_map_    = $maps['css'];
-		} else {
-			$this->color_map_ = include APP_SNIPPET_PATH . self::COLOR_MAP;
-			$this->fcolor_map_ = include APP_SNIPPET_PATH . self::FCOLOR_MAP;
-			$this->fsize_map_ = include APP_SNIPPET_PATH . self::FSIZE_MAP;
-			if ( defined( 'APP_CSS_MAPPING' ) && is_readable( APP_SNIPPET_PATH . self::CSS_MAP ) ) {
-				$this->css_map_ = include APP_SNIPPET_PATH . self::CSS_MAP;
-			}
-			$maps = array(
-				'color'  => $this->color_map_,
-				'fcolor' => $this->fcolor_map_,
-				'fsize' => $this->fsize_map_,
-				'css' => $this->css_map_ );
-			S::addCtnr($maps, 'snippet_maps');
-		}
-		*/
+            /*if ( S::hasCtnr('snippet_maps') ) {
+                    $maps = S::getCtnr('snippet_maps');
+                    $this->color_map_  = $maps['color'];
+                    $this->fcolor_map_ = $maps['fcolor'];
+                    $this->fsize_map_  = $maps['fsize'];
+                    $this->css_map_    = $maps['css'];
+            } else {
+                    $this->color_map_ = include APP_SNIPPET_PATH . self::COLOR_MAP;
+                    $this->fcolor_map_ = include APP_SNIPPET_PATH . self::FCOLOR_MAP;
+                    $this->fsize_map_ = include APP_SNIPPET_PATH . self::FSIZE_MAP;
+                    if ( defined( 'APP_CSS_MAPPING' ) && is_readable( APP_SNIPPET_PATH . self::CSS_MAP ) ) {
+                            $this->css_map_ = include APP_SNIPPET_PATH . self::CSS_MAP;
+                    }
+                    $maps = array(
+                            'color'  => $this->color_map_,
+                            'fcolor' => $this->fcolor_map_,
+                            'fsize' => $this->fsize_map_,
+                            'css' => $this->css_map_ );
+                    S::addCtnr($maps, 'snippet_maps');
+            }
+            */
 	}
 
 	// }}}
@@ -128,18 +140,20 @@ class Framework_Snippet
 	 * 可変データを元に戻す
 	 * @return	Framework_Snippet
 	 */
-	public function reset()
+	public function reset($all_rest = false)
 	{
-		$this->data_ = array();
-		$this->id_ = null;
-		$this->lines_ = array();
-		$this->lines_c_ = 0;
-		$this->draw_bg_ = false;
-		$this->color_id_ = null;
-		$this->color_ = array();
-		$this->setTemplate( $this->name_ );
-		$this->rows_ = array();
-		return $this;
+            $this->data_ = array();
+            if($all_rest) {
+                $this->id_ = null;
+            }
+            $this->lines_ = array();
+            $this->lines_c_ = 0;
+            $this->draw_bg_ = false;
+            $this->color_id_ = null;
+            $this->color_ = array();
+            $this->setTemplate( $this->name_ );
+            $this->rows_ = array();
+            return $this;
 	}
 
 	// }}}
