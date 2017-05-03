@@ -573,4 +573,10 @@ class AppBase
        $bytes = sprintf('%.'.$precision.'f', $bytes);
        return $sign.$bytes.' '.$unit;
    }
+   
+   public static function getPath($path = '')
+   {
+       $root = realpath(FRAMEWORK_DIR.'/../');
+       return sprintf('%s/%s', $root, $path);
+   }
 }

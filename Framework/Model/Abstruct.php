@@ -1,4 +1,4 @@
-<?php
+ｇ<?php
 class Framework_Model_Abstruct extends Model
 {
     // DBを使用しない場合のスキーマ定義
@@ -23,7 +23,7 @@ class Framework_Model_Abstruct extends Model
         return self::getInstance($id, true);
     }
     public static function getInstance( $id = null, $force = false )
-    {   
+    {
         if($id === null) {
             return self::newModel();
         }
@@ -68,6 +68,7 @@ class Framework_Model_Abstruct extends Model
             $obj = new static();
         }
         */
+        
         return $obj;
     }
 
@@ -106,6 +107,31 @@ class Framework_Model_Abstruct extends Model
                 foreach($options['where'] as $field => $value) {
                     //App::debug($field."=>".$value);
                     $orm->where($field, $value);
+                }
+            }
+            // より小さい
+            if(isset($options['where_lt'])) {
+                foreach($options['where_lt'] as $field => $value) {
+                    $orm->where_lt($field, $value);
+                }
+            }
+            // より大きい
+            if(isset($options['where_gt'])) {
+                foreach($options['where_gt'] as $field => $value) {
+                    $orm->where_gt($field, $value);
+                }
+            }
+            // 以下
+            if(isset($options['where_lte'])) {
+                foreach($options['where_lte'] as $field => $value) {
+                    $orm->where_lte($field, $value);
+                }
+            }
+            // 以上
+            if(isset($options['where_gte'])) {
+                foreach($options['where_gte'] as $field => $value) {
+                    App::debug($field."::".$value);
+                    $orm->where_gte($field, $value);
                 }
             }
         }

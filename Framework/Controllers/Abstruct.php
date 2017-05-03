@@ -146,4 +146,19 @@ class Framework_Controllers_Abstruct
         header('Location: '.$path);
         exit;
     }
+    
+    
+    // アクション間クエリー受け渡し
+    // memcacheがいいかもしれないけど取り敢えずsessionで管理
+    // session_idをトークンIDっぽくダミーで受け渡し（見てない）
+    public function setToken($params)
+    {
+        $_SESSION['memcached']['token'] = $params;
+        return session_id();
+    }
+    
+    public function getToken($key)
+    {
+        return $_SESSION['memcached']['token'];
+    }
 }
