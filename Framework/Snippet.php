@@ -243,6 +243,11 @@ class Framework_Snippet
 	}
 
 	// }}}
+        
+        public function getData()
+        {
+            return $this->data_;
+        }
 
 	// {{{ public function setData( $data )
 
