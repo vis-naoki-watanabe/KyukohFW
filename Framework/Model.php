@@ -85,7 +85,6 @@ class Framework_Model/// implements IteratorAggregate
      */
     public static function getInstance( $id = null, $replace_key_id = null )
     {
-        echo "[".$id."]";
 	// 空のオブジェクト
 	if( $id === null ) return new static();
 	
