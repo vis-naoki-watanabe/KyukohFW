@@ -491,8 +491,6 @@
          * save() is called.
          */
         public function create($data=null) {
-            print_r($data);
-            
             $this->_is_new = true;
             if (!is_null($data)) {
                 return $this->hydrate($data)->force_all_dirty();

@@ -213,7 +213,112 @@ class Framework_Helper_Net
             return false;
         }
     }
-	
+
+    // {{{ public static function httpPost($url, array $options = array())
+    
+    /**
+     * マルチパートボディを組み立てて文字列としてセットする。
+     * 
+     * @param resource $ch cURLリソース
+     * @param array $options
+     * @return bool 成功 or 失敗
+     */
+    public static function http($url, array $options = array())
+    {
+        if(is_array($url))
+        {
+            $options = $url;
+            $url = App::choose($options, 'url');
+        }
+                
+        $method  = App::choose($options, 'method', 'GET'); 
+        $params  = App::choose($options, 'params', array());            // 「送信する名前 => 送信する値」の形の連想配列
+        $files   = App::choose($options, 'files', array());             // 「送信する名前 => ファイルパス」の形の連想配列
+        $datas   = App::choose($options, 'datas', array());             // 「送信する名前 => 送信データ」の形の連想配列（用意したファイルでないがファイルとして送る場合)
+        $headers = App::choose($options, 'headers', array());           
+
+        $ch = curl_init($url);
+        static $disallow = array("\0", "\"", "\r", "\n");
+        $body = array();
+        foreach ($params as $k => $v) {
+            $k = str_replace($disallow, "_", $k);
+            $body[] = implode("\r\n", array(
+                "Content-Disposition: form-data; name=\"{$k}\"",
+                "",
+                filter_var($v), 
+            ));
+        }
+
+        foreach ($files as $k => $v) {
+            //if(false === $v = realpath(filter_var($v)))continue;
+            if(!is_file($v))continue;
+            if(!is_readable($v))continue;
+            $data = file_get_contents($v);
+            
+            $v = call_user_func("end", explode(DIRECTORY_SEPARATOR, $v));
+            list($k, $v) = str_replace($disallow, "_", array($k, $v));
+            $body[] = implode("\r\n", array(
+                "Content-Disposition: form-data; name=\"{$k}\"; filename=\"{$v}\"",
+                "Content-Type: application/octet-stream",
+                "",
+                $data,
+            ));
+        }
+        foreach ($datas as $k => $data) {
+            $body[] = implode("\r\n", array(
+                "Content-Disposition: form-data; name=\"{$k}\"; filename=\"{$k}\"",
+                "Content-Type: application/octet-stream",
+                "",
+                $data,
+            ));
+        }
+
+        do {
+            $boundary = "---------------------" . md5(mt_rand() . microtime());
+        } while (preg_grep("/{$boundary}/", $body));
+        array_walk($body, function (&$part) use ($boundary) {
+            $part = "--{$boundary}\r\n{$part}";
+        });
+        $body[] = "--{$boundary}--";
+        $body[] = "";
+        
+        $curl_headers = array(
+            "Expect: 100-continue",
+            "Content-Type: multipart/form-data; boundary={$boundary}",
+        );
+        foreach($headers as $key => $val)
+        {
+            $curl_headers[] = "{$key}: {$val}";
+        }
+        
+        $curl_option = array(
+            CURLOPT_HTTPHEADER      => $curl_headers,
+            CURLOPT_RETURNTRANSFER  => true,
+        );
+        
+        if($method == 'POST')
+        {
+            $curl_option = $curl_option + array(
+                CURLOPT_POST       => true,
+                CURLOPT_POSTFIELDS => implode("\r\n", $body),
+            );
+        }
+        curl_setopt_array($ch, $curl_option);
+        
+        //print_r(implode("\r\n", $body));
+        //print_r($curl_headers);
+        
+        $response = curl_exec($ch);
+        //App::debug($response);
+        
+        $result = json_decode($response, true);        
+        curl_close($ch);
+        
+        return $result;
+    }
+
+    // }}}
+
     /**
      * マルチパートボディを組み立てて文字列としてセットする。
      * 

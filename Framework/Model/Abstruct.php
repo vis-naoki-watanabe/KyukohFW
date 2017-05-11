@@ -1,4 +1,4 @@
-ｇ<?php
+<?php
 class Framework_Model_Abstruct extends Model
 {
     // DBを使用しない場合のスキーマ定義
