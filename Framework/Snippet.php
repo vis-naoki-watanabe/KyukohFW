@@ -168,9 +168,11 @@ class Framework_Snippet
 	public function render( $no_echo = false )
 	{
             ob_start();
+            /* TODO: 何この処理？
             if ( ! is_null( $this->id_ ) ) {
                 echo sprintf( '<a%s></a>', $this->id_ ) . "\n";
             }
+             */
             include $this->templ_;
             if ( $no_echo ) {
                 $content = ob_get_contents();
