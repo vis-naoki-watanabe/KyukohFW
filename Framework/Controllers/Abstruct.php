@@ -53,6 +53,15 @@ class Framework_Controllers_Abstruct
         // オーバーライド用
     }
     
+    public function getControllerName()
+    {
+        return $this->_controller;
+    }
+    public function getActionName()
+    {
+        return $this->_action;
+    }
+    
     public function run($action)
     {
         // ① App毎のAbstructControllerでターゲットAction前にやりたい処理
