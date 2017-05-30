@@ -13,4 +13,4 @@ fi
 
 comm="sshpass -p $SRC_PASSWD rsync $dry_run -rlcgzopDv --files-from=sync_files.txt --exclude='._*' -e 'ssh -p $SRC_PORT' $SRC_HOST:$SRC_ROOT $APP_ROOT"
 echo $comm
-$comm
+eval ${comm}
