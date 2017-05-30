@@ -1,0 +1,9 @@
+App/asset/scss/
+App/asset/css/
+App/asset/js/
+App/controllers/AbstructController.php
+App/controllers/AssetController.php
+App/controllers/AuthAbstructController.php
+App/models/Abstruct.php
+App/views/layouts/main/
+App/views/snippets/
