@@ -7,3 +7,8 @@ App/controllers/AuthAbstructController.php
 App/models/Abstruct.php
 App/views/layouts/main/
 App/views/snippets/
+config/domain_name.php
+config/config.php
+.htaccess
+index.php
+robots.txt
