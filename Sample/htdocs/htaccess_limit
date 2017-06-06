@@ -1,0 +1,28 @@
+<IfModule rewrite_module>
+    Options +FollowSymLinks
+    IndexIgnore */*
+
+    <Files ~ "^\.(htaccess|htpasswd)$">
+        Deny from all
+    </Files>
+
+    # 許可するIPアドレス
+#    allow from ***.***.***.***              # 許可するIPアドレス
+
+    # ベーシック認証
+#    AuthUserFile /xxx/xxxx/.htpasswd        # 絶対パス
+#    AuthGroupFile /dev/null
+#    AuthName "Please enter your ID and password"
+#    AuthType Basic
+#    Satisfy Any
+#    Order allow,deny
+#    require valid-user
+
+    # Rewrite
+    RewriteEngine on    
+    # Document Rootにファイルorディレクトリが存在する場合は書き換えない
+    RewriteCond %{REQUEST_FILENAME} !-f  
+    RewriteCond %{REQUEST_FILENAME} !-d  
+
+    RewriteRule . index.php [QSA]
+</IfModule>

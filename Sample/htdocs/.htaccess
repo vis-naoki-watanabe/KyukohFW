@@ -1,0 +1,16 @@
+<IfModule rewrite_module>
+    Options +FollowSymLinks
+    IndexIgnore */*
+
+    <Files ~ "^\.(htaccess|htpasswd)$">
+        Deny from all
+    </Files>
+
+    # Rewrite
+    RewriteEngine on    
+    # Document Rootにファイルorディレクトリが存在する場合は書き換えない
+    RewriteCond %{REQUEST_FILENAME} !-f  
+    RewriteCond %{REQUEST_FILENAME} !-d  
+
+    RewriteRule . index.php [QSA]
+</IfModule>
