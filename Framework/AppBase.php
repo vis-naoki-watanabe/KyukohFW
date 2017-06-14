@@ -272,8 +272,19 @@ class AppBase
     
     // snake->Camel
     public static function camelize($str) {
-        $str = ucwords($str, '_');
-        return str_replace('_', '', $str);
+        // PHPバージョンが5.4.32以上
+        if(version_compare(PHP_VERSION, "5.4.32", ">=")) {
+            $str = ucwords($str, '_');
+            return str_replace('_', '', $str);
+        }
+        
+        // PHPバージョンが5.4.32未満
+        $arr = explode("_", $str);
+        $buff = array();
+        foreach($arr as $v) {
+            $buff[]= ucwords($v);
+        }
+        return implode("", $buff);
     }
 
     // Camel->snake
