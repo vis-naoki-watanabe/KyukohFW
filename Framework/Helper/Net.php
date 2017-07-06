@@ -305,13 +305,13 @@ class Framework_Helper_Net
         //print_r($curl_headers);
         
         $response = curl_exec($ch);
-        App::debug("response");
-        App::debug($response);
+        //App::debug("response");
+        //App::debug($response);
         
         $result = json_decode($response, true);                
         
         $info = curl_getinfo($ch);
-        //print_r($info);;
+        //print_r($info);
         $errno = curl_errno($ch);
         $error = curl_error($ch);
         //print_r($errno);
@@ -321,6 +321,10 @@ class Framework_Helper_Net
 
         if (CURLE_OK !== $errno) {
           throw new RuntimeException($error, $errno);
+        }
+        
+        if(@$info['content_type']=='text/html') {
+            return $response;
         }
   
         return $result;
