@@ -3,7 +3,7 @@
 
 export WORK_ROOT=$(cd $(dirname $0)/../;pwd)
 export PROJECT_ROOT=$(cd $(dirname $0)/../../../;pwd)
-export FRAMEWORK_REF="../../00_framework/Framework/KyukohFW"
+export FRAMEWORK_REF="../../00_framework/KyukohFW"
 
 # プロジェクトルート: cf. 00_application
 PROJECT_ROOT=${PROJECT_ROOT}/$1
