@@ -27,14 +27,21 @@ class Framework_Model_Abstruct extends Model
         if($id === null) {
             return self::newModel();
         }
-        
+
         $options = null;
         
         if($id && is_array($id)) {
             $options = $id;
             $id = null;
         }
-        
+
+        // whereが指定されてない場合は、where句とする
+        if(!static::isWhere($options)) {
+            $options = array(
+                'where' => $options
+            );
+        }
+
         // 削除フラグ参照
         if( static::$delete_flags && !$force ) {
             $options['where'] = array_merge(App::choose($options,'where',array()), static::$delete_flags);
@@ -50,7 +57,7 @@ class Framework_Model_Abstruct extends Model
         $orm = static::getModel($class_name);
         self::setOptions( $orm, $options );
         $obj = $id?$orm->find_one($id):$orm->find_one();
-        
+       
         if( $obj ) {            
             $obj->init();
             
@@ -73,6 +80,18 @@ class Framework_Model_Abstruct extends Model
     }
 
     // }}}
+    
+    // optionsにwhereが含まれるか
+    private static function isWhere($options)
+    {
+        $ret = false;
+        if($options && is_array($options)) {
+            foreach($options as $key => $params) {
+                if(preg_match('/where/', $key)) return true;
+            }
+        }
+        return false;
+    }
     
     // {{{ public static function _getList()
     
