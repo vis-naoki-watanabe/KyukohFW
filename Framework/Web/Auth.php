@@ -62,6 +62,21 @@ class Framework_Web_Auth
         return $login_flag;
     }
     
+    public static function loginByOptions($options)
+    {
+        $login_flag = false;
+
+        $user = App_User::getInstance($options);
+        if($user) {
+            $options = array(
+                'id' => $user->id
+            );
+            $_SESSION[self::LOGIN_KEY] = $options;
+            $login_flag = true;
+        }
+        return $login_flag;
+    }
+
     public static function logout()
     {
         $_SESSION[self::LOGIN_KEY] = null;

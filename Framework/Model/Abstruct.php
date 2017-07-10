@@ -35,6 +35,13 @@ class Framework_Model_Abstruct extends Model
             $id = null;
         }
         
+        // whereが指定されてない場合は、where句とする
+        if($options && !static::isWhere($options)) {
+            $options = array(
+                'where' => $options
+            );
+        }
+        
         // 削除フラグ参照
         if( static::$delete_flags && !$force ) {
             $options['where'] = array_merge(App::choose($options,'where',array()), static::$delete_flags);
@@ -73,6 +80,18 @@ class Framework_Model_Abstruct extends Model
     }
 
     // }}}
+    
+    public static function isWhere($options)
+    {
+        if(is_array($options)) {
+            foreach($options as $key => $params) {
+                if(preg_match('/where/', $key)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     
     // {{{ public static function _getList()
     
