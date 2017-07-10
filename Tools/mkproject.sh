@@ -56,6 +56,8 @@ if [ -e ${PROJECT_PATH}/App ]; then
 else
     echo ${PROJECT_PATH}/App
     cp -r ../Sample ${PROJECT_PATH}/App
+    mv ${PROJECT_PATH}/App/htdocs ${PROJECT_PATH}/
+    mv ${PROJECT_PATH}/App/config ${PROJECT_PATH}/
 fi
 echo ""
 
