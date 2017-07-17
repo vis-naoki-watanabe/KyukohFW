@@ -648,4 +648,63 @@ class AppBase
        $root = realpath(FRAMEWORK_DIR.'/../');
        return sprintf('%s/%s', $root, $path);
    }
+   
+   /**
+    * 
+    * 正規表現でUserAgent分岐/OS
+    * 
+    * @param string $user_agent
+    * @return string
+    */
+   public static function getOs($user_agent = '')
+   {
+       if (empty($user_agent)) {
+           // ユーザエージェント
+           $user_agent = $_SERVER['HTTP_USER_AGENT'];
+       }
+
+       if (preg_match('/Windows NT 10.0/', $user_agent)) {
+           //$os = 'Windows 10';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 6.3/', $user_agent)) {
+           //$os = 'Windows 8.1 / Windows Server 2012 R2';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 6.2/', $user_agent)) {
+           //$os = 'Windows 8 / Windows Server 2012';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 6.1/', $user_agent)) {
+           //$os = 'Windows 7 / Windows Server 2008 R2';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 6.0/', $user_agent)) {
+           //$os = 'Windows Vista / Windows Server 2008';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 5.2/', $user_agent)) {
+           //$os = 'Windows XP x64 Edition / Windows Server 2003';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 5.1/', $user_agent)) {
+           //$os = 'Windows XP';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 5.0/', $user_agent)) {
+           //$os = 'Windows 2000';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 4.0/', $user_agent)) {
+           $os = 'Microsoft Windows NT 4.0'; 
+       } elseif (preg_match('/Mac OS X ([0-9\._]+)/', $user_agent, $matches)) {
+           //$os = 'Macintosh Intel ' . str_replace('_', '.', $matches[1]);
+           $os = 'Macintosh';
+       } elseif (preg_match('/OS ([a-z0-9_]+)/', $user_agent, $matches)) {
+           //$os = 'iOS ' . str_replace('_', '.', $matches[1]);
+           $os = 'iOS';
+       } elseif (preg_match('/Android ([a-z0-9\.]+)/', $user_agent, $matches)) {
+           //$os = 'Android ' . $matches[1];
+           $os = 'Android';
+       } elseif (preg_match('/Linux ([a-z0-9_]+)/', $user_agent, $matches)) {
+           //$os = 'Linux ' . $matches[1];
+           $os = 'Linux';
+       } else {
+           $os = 'unidentified';
+       }
+
+       return $os;
+   }
 }
