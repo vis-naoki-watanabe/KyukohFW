@@ -153,7 +153,29 @@ class Framework_Model_Abstruct extends Model
                     $orm->where_gte($field, $value);
                 }
             }
+            
+            if(!isset($options['noorder'])) {
+                $order_flag = false;
+                if(isset($options['order'])) {
+                    $order_flag = true;
+                    $orm->order_by_asc($options['order']);
+                }
+                if(isset($options['order_by_asc'])) {
+                    $order_flag = true;
+                    $orm->order_by_asc($options['order_by_asc']);
+                }
+                if(isset($options['order_by_desc'])) {
+                    $order_flag = true;
+                    $orm->order_by_desc($options['order_by_desc']);
+                }
+                if(!$order_flag) {
+                    $orm->order_by_asc(static::$_id_column);
+                }
+            }
         }
+        
+        
+        
     }
     
     // {{{ public static function getList()

@@ -8,11 +8,13 @@ class Framework_Controllers_Abstruct
     protected $_controller  = null;      /* string */
     protected $_action      = null;      /* string */
     protected $_user        = null;
+    protected $_pagenator   = null;
     
     public function __construct($controller_name = null, $action_name = null)
     {
-        $this->_controller = $controller_name;
-        $this->_action = $action_name;
+        $this->_controller  = $controller_name;
+        $this->_action      = $action_name;
+        $this->_variable    = $this->getVariable();
         $this->init();
     }
     
@@ -34,15 +36,16 @@ class Framework_Controllers_Abstruct
         else if( $name == 'user' ) {
             return $this->getUser();
         }
-        else if(!$this->_variable) {
-            $this->_variable = new Framework_Web_Variable();
+        else if( $name == 'paginator' ) {
+            return $this->getPaginator();
         }
-        return $this->_variable;
+        return $this->getVariable();
     }
     
     public function getUser() { return $this->getViewer(); }
     public function getViewer()
     {
+        App::debug(get_class($this)."::line:".__LINE__);
         if(Auth::isLogin()) return Auth::getUser();
         return null;
     }
@@ -149,6 +152,8 @@ class Framework_Controllers_Abstruct
     // 表示
     public function render($action = null, $controller = null)
     {
+        $this->_variable->paginator = $this->getPaginator();
+        
         $this->_render->setVariable($this->_variable);
         $this->_render->render($action, $controller);
     }
@@ -223,6 +228,22 @@ class Framework_Controllers_Abstruct
             $ret['params'] = App::raw_json_encode( $ret['params'] );
         }
 	return $ret;
+    }
+    
+    public function getVariable()
+    {
+        if(!$this->_variable) {
+            $this->_variable = new Framework_Web_Variable();
+        }
+        return $this->_variable;
+    }
+    
+    public function getPaginator()
+    {
+        if(!$this->_pagenator) {
+            $this->_pagenator = new Framework_Web_Paginator();
+        }
+        return $this->_pagenator;
     }
     
     // 継承元のクラスを返す

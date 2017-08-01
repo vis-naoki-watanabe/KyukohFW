@@ -707,4 +707,19 @@ class AppBase
 
        return $os;
    }
+   
+    public static function isNumeric($num)
+    {
+        return is_numeric($num);
+    }
+
+    public static function isInt($num)
+    {
+        return (is_numeric($num) && intval($num)==$num);
+    }
+
+    public static function isFloat($num)
+    {
+        return (is_numeric($num) && floatval($num)==$num);
+    }
 }
