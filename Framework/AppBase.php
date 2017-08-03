@@ -401,6 +401,13 @@ class AppBase
         $flags = $flag?0:PREG_SPLIT_NO_EMPTY;
         return preg_split('/(\r\n|\n|\r)/', $target, -1, $flags);
     }
+    
+    public static function explode($sep, $val)
+    {
+        if($val === null) return null;
+        $val = str_replace(" ", "", $val);
+        return explode($sep, $val);
+    }
 
     /*
     public static function extractDate_test()
@@ -721,5 +728,29 @@ class AppBase
     public static function isFloat($num)
     {
         return (is_numeric($num) && floatval($num)==$num);
+    }
+    
+    public static function filterArray($array, $allow_field_string = 'all', $default = null)
+    {
+        // 全て返却
+        if($allow_field_string == 'all') return $array;
+        // 指定フィールドがないので$defaultを返却
+        if(!$allow_field_string) return $default;
+
+        if(is_array($allow_field_string)) {
+            $allow_fields = $allow_field_string;
+        } else {
+            $allow_fields = explode(',', $allow_field_string);
+        }
+        
+        $ret = array();
+        if($allow_fields && is_array($allow_fields)) {
+            foreach($allow_fields as $id => $key) {
+                if(array_key_exists($key, $array)) {
+                    $ret[$key] = $array[$key];
+                }
+            }
+        }
+        return $ret;
     }
 }

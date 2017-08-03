@@ -840,15 +840,16 @@ class Framework_Model_Abstruct extends Model
         return $fields;
     }
     
-    public function toArray()
+    public function toArray($filter = 'all')
     {
         $ret = array();
         $fields = array_keys($this->getSchemasFields());
-
+        
         foreach($fields as $field)
         {
             $ret[$field] = $this->$field;
         }
-        return $ret;
+        
+        return App::filterArray($ret, $filter);
     }
 }

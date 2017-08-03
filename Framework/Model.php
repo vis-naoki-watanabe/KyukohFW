@@ -1,6 +1,6 @@
 <?php
 
-class Framework_Model/// implements IteratorAggregate
+class xFramework_Model/// implements IteratorAggregate
 {
     // {{{ properties
 
