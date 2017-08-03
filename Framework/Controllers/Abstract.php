@@ -269,20 +269,30 @@ class Framework_Controllers_Abstract
           //die('bad or missing callback');
             $this->sendJSONP( $list );exit;
         }
+        
+        $indent_flag = App::choose($options, 'indent', @$_REQUEST['indent']);
+        // $optionsにtrueとするだけでもインデント扱い
+        if($options === true) {
+            $indent_flag = true;
+        }
+        $add_result  = !App::choose($options, 'raw_result', false);
 
-        if($list) {
-            $list = array(
-                'result' => 'OK',
-                'data'   => $list
-            );
-        }
-        else {
-            $list = array(
-                'result' => 'NG'
-            );
-        }
-        if($options) {
-            $list = array_merge($list, $options);
+        if($add_result) {
+            if($list) {
+                $list = array(
+                    'result' => 'OK',
+                    'data'   => $list
+                );
+            }
+            else {
+                $list = array(
+                    'result' => 'NG'
+                );
+            }
+        } else {
+            if(!is_array($list)) {
+                $list = "[]";
+            }
         }
         
         //App::debug($list);
@@ -292,7 +302,7 @@ class Framework_Controllers_Abstract
         //header('X-XSS-Protection: 1; mode=block');
         header("Content-type: text/plain; charset=UTF-8");
         
-        $json = App::raw_json_encode($list, $this->getRequest('indent'));
+        $json = App::raw_json_encode($list, $indent_flag);
         $json = str_replace('\/','/',$json);
         $json = str_replace('\0','',$json);
         

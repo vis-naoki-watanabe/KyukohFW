@@ -243,13 +243,13 @@ class Framework_Model_Abstract extends Model
         }
         
         foreach($schema as $key => &$val) {
-            if( $val == 'APP_NOW()' ) {
+            if( $val === 'APP_NOW()' ) {
                 $val = App::timestamp();
             }
-            else if( $val == 'USER_NOW()' ) {
+            else if( $val === 'USER_NOW()' ) {
                 $val = App::user_timestamp();
             }
-            if($key == 'params' && is_array($val)) {
+            if($key === 'params' && is_array($val)) {
                 $val = App::raw_json_encode($val);
             } 
         }
@@ -359,7 +359,7 @@ class Framework_Model_Abstract extends Model
     public static function getModel($name)
     {
         $config_ = App::getConfig('database');
-        
+
         // TODO: connection_nameをdefault以外にするとエラーになる？
         $connection_name = 'default';
         if(!isset(self::$_db[$connection_name])) {
@@ -823,7 +823,7 @@ class Framework_Model_Abstract extends Model
         
         // DBから取得
         $orm = static::getModel($class_name);
-        
+      
         if( $this->nodb_schemas ) {
             $fields = $this->nodb_schemas;
         } else {

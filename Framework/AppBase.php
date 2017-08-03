@@ -109,7 +109,7 @@ class AppBase
      */
     public static function choose( $arr, $key, $default = null )
     {
-        if ( is_array( $arr ) && isset( $arr[$key] ) ) {
+        if ( is_array( $arr ) && array_key_exists( $key, $arr ) ) {
             return $arr[$key];
         }
         return $default;
