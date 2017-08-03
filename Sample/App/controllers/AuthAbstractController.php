@@ -1,5 +1,5 @@
 <?php
-class AuthAbstructController extends AbstructController
+class AuthAbstractController extends AbstractController
 {
     public function init()
     {

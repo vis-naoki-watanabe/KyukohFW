@@ -1,5 +1,5 @@
 <?php
-class IndexController extends AbstructController
+class IndexController extends AbstractController
 {
     public function actionBefore()
     {

@@ -50,7 +50,7 @@ class Framework_Controllers_Abstract
         return null;
     }
         
-    // App毎のAbstructControllerでコンストラクター後に
+    // App毎のAbstractControllerでコンストラクター後に
     public function init()
     {
         // auth()メソッドがある場合は、auth():認証する
@@ -70,7 +70,7 @@ class Framework_Controllers_Abstract
     
     public function run($action)
     {
-        // ① App毎のAbstructControllerでターゲットAction前にやりたい処理
+        // ① App毎のAbstractControllerでターゲットAction前にやりたい処理
         $this->preDispatch();
         // ② App_Controller毎のターゲットAction前にやりたい処理
         $this->actionBefore();
@@ -82,11 +82,11 @@ class Framework_Controllers_Abstract
         }
         // ④ App_Controller毎のターゲットAction後にやりたい処理
         $this->actionAfter();
-        // ⑤ App毎のAbstructControllerでターゲットAction後にやりたい処理
+        // ⑤ App毎のAbstractControllerでターゲットAction後にやりたい処理
         $this->postDispatch();
     }
     
-    // ① App毎のAbstructControllerでターゲットAction前にやりたい処理
+    // ① App毎のAbstractControllerでターゲットAction前にやりたい処理
     public function preDispatch()
     {
         // オーバーライド用
@@ -111,14 +111,14 @@ class Framework_Controllers_Abstract
         // オーバーライド用
     }
     
-    // ⑤ App毎のAbstructControllerでターゲットAction後にやりたい処理
+    // ⑤ App毎のAbstractControllerでターゲットAction後にやりたい処理
     public function postDispatch()
     {
         // オーバーライド用
     }
     
     // TODO: requestをstaticで使用してるが
-    // 参照渡し か AbstructController::$_request の方がいいのか考えてみる
+    // 参照渡し か AbstractController::$_request の方がいいのか考えてみる
     public function getRequest($key = null, $default = null, $array = true)
     {
         $request = Framework_Web_Application::getRequest(true);

@@ -1,5 +1,5 @@
 <?php
-class App_Abstruct extends Framework_Model_Abstruct
+class App_Abstract extends Framework_Model_Abstract
 {
     const STRING_SIZE_TEXTAREA = 65535; 
     const STRING_SIZE_TEXT     = 512;

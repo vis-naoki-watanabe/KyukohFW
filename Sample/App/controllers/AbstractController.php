@@ -1,5 +1,5 @@
 <?php
-class AbstructController extends Framework_Controllers_Abstruct
+class AbstractController extends Framework_Controllers_Abstract
 {
     public function init()
     {

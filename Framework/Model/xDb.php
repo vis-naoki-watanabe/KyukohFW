@@ -20,15 +20,15 @@ class Framework_Model_Db extends Framework_Model
     // データを取得できたか
     protected $empty = true;
 
-    // {{{ public function __construct( $id = null )
+    // {{{ public function __constract( $id = null )
     
     /**
      * コンストラクタ
      * @var void
      */
-    public function __construct( $id = null )
+    public function __constract( $id = null )
     {
-	parent::__construct();
+	parent::__constract();
 	
 	if( $id ) {
 	    $this->get( $id );
@@ -206,7 +206,7 @@ class Framework_Model_Db extends Framework_Model
 	// }}}
     public function _select( $where )
     {	
-	$query = App_Abstruct::createQuery('select', $this->getTable(), null, $where );
+	$query = App_Abstract::createQuery('select', $this->getTable(), null, $where );
 	return $this->getByQuery( $query, $where );
     }
     
@@ -248,7 +248,7 @@ class Framework_Model_Db extends Framework_Model
 	$binds = $this->convertDateNow( $binds );
         App::debug($binds);
 	
-	$query = App_Abstruct::createQuery('insert', $this->getTable(), $binds );
+	$query = App_Abstract::createQuery('insert', $this->getTable(), $binds );
 	$result = $this->connection()->execute( $query, $binds );
 	
 	// 最後に挿入したIDを返却
@@ -273,7 +273,7 @@ class Framework_Model_Db extends Framework_Model
 	// NOW()の使い方が分からないので取り敢えず時刻で入れる
 	$binds = $this->convertDateNow( $binds );
 
-	$query = App_Abstruct::createQuery('update', $this->getTable(), $binds, $where );
+	$query = App_Abstract::createQuery('update', $this->getTable(), $binds, $where );
         $result = $this->connection()->execute( $query, $binds );
     }
 
@@ -305,7 +305,7 @@ class Framework_Model_Db extends Framework_Model
 	// NOW()の使い方が分からないので取り敢えず時刻で入れる
 	$binds = $this->convertDateNow( $binds );
 
-	$query = App_Abstruct::createQuery('update', $this->getTable(), $binds, $where );
+	$query = App_Abstract::createQuery('update', $this->getTable(), $binds, $where );
 	$result = $this->connection()->execute( $query, $binds );
     }
 
@@ -331,7 +331,7 @@ class Framework_Model_Db extends Framework_Model
 	// NOW()の使い方が分からないので取り敢えず時刻で入れる
 	$binds = $this->convertDateNow( $binds );
 	
-	$query = App_Abstruct::createQuery('update', $this->getTable(), $binds, $where );
+	$query = App_Abstract::createQuery('update', $this->getTable(), $binds, $where );
 	$result = $this->connection()->execute( $query, $binds );
     }
     
@@ -355,7 +355,7 @@ class Framework_Model_Db extends Framework_Model
 	// NOW()の使い方が分からないので取り敢えず時刻で入れる
 	$binds = $this->convertDateNow( $binds );
 
-	$query = App_Abstruct::createQuery('delete', $this->getTable(), $binds, $where );
+	$query = App_Abstract::createQuery('delete', $this->getTable(), $binds, $where );
 	$result = $this->connection()->execute( $query, $binds );
     }
     
@@ -371,7 +371,7 @@ class Framework_Model_Db extends Framework_Model
     }
     
     /*
-     * ToDo: abstructの必要ある？
+     * ToDo: abstractの必要ある？
     public function getList()
     {
         $table = $this->getTable();
