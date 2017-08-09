@@ -61,6 +61,7 @@ class Framework_Model_Abstract extends Model
         if( $obj ) {            
             $obj->init();
             
+            /* Instance時のキャッシュ作成は、一時中止：用途が決まったら復活
             // キャッシュ保存
             if( $id ) {
                 $cache_id = $obj->prepareCache($id);
@@ -68,6 +69,7 @@ class Framework_Model_Abstract extends Model
                     $obj->cache->set($cache_id, $obj->toSerialize());
                 }
             }
+             */
         }
         /*
         // データが存在しない場合、空のオブジェクトを生成
@@ -186,6 +188,13 @@ class Framework_Model_Abstract extends Model
      */
     public static function getList($options = null)
     {
+        // whereが指定されてない場合は、where句とする
+        if($options && !static::isWhere($options)) {
+            $options = array(
+                'where' => $options
+            );
+        }
+        
         $check_delete_flag = true;
         // 削除フラグ参照
         if( static::$delete_flags ) {
@@ -290,17 +299,16 @@ class Framework_Model_Abstract extends Model
     
     public function _update($schema = null, $save_flag = true)
     {
-        /*
         if($schema) {
             foreach($schema as $key => $val)
             {
                 if($key == 'params' && is_array($val)) {
-                    $val = App::raw_json_encode($val);
+                    //$val = App::raw_json_encode($val);
                 }
                 $this->$key = $val;
             }
         }
-        */
+
         if($save_flag) {
             $this->save();
         }
@@ -442,8 +450,10 @@ class Framework_Model_Abstract extends Model
      */
     protected function getCache()
     {
-        $cache = new Framework_Base_Cache();
-        return $cache;
+        if($this->_cache) {
+            return $this->_cache;
+        }
+        return new Framework_Base_Cache();
     }
 
     // }}}
@@ -459,13 +469,18 @@ class Framework_Model_Abstract extends Model
      * @param	
      * @return	
      */
-    protected function prepareCache( $key = "" )
+    protected function prepareCache( $key = null )
     {
-        if(!$this->_cache_type || !$this->_cache_name) return null;
+        $keys = array();
+        if($this->_cache_type) { $keys[] = $this->_cache_type; }
+        if($this->_cache_name) { $keys[] = $this->_cache_name; }
+        if($key) { $keys[] = $key; }
         
-        $key = sprintf( "%s.%s.%s", $this->_cache_type, $this->_cache_name, $key );
+        if(count($keys)<=0) return null;
+        
+        $cache_key = implode(".", $keys);
 
-        return $key;
+        return $cache_key;
     }
 
     // }}}

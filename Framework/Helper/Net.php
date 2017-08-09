@@ -291,10 +291,13 @@ class Framework_Helper_Net
         }
 
         $curl_options = array(
-            CURLOPT_POST       => true,
-            CURLOPT_POSTFIELDS => implode("\r\n", $body),
-            CURLOPT_HTTPHEADER => $curl_headers,
-            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST            => true,
+            CURLOPT_POSTFIELDS      => implode("\r\n", $body),
+            CURLOPT_HTTPHEADER      => $curl_headers,
+            CURLOPT_RETURNTRANSFER  => true,
+            
+            //CURLOPT_COOKIEJAR       => "cookie",
+            //CURLOPT_COOKIEFILE      => "tmp"
         )+$curlopt;
         curl_setopt_array($ch, $curl_options);
         

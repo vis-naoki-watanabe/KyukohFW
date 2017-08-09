@@ -566,8 +566,8 @@ class Cache_Lite
     {
         //include_once('PEAR.php');
         //return PEAR::raiseError($msg, $code, $this->_pearErrorMode);
-        App::debug($msg." code:".$code);
-        App::debug($this->_pearErrorMode);
+        App::debug("line:".__LINE__." ".$msg." code:".$code);
+        App::debug("line:".__LINE__." ".$this->_pearErrorMode);
     }
     
     /**

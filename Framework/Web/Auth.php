@@ -85,8 +85,6 @@ class Framework_Web_Auth
     public static function isLogin()
     {
         $login_user = App::choose($_SESSION, self::LOGIN_KEY);
-        App::debug("login check:key:". self::LOGIN_KEY);
-        App::debug($login_user);
         if( $login_user ) {
             return true;
         }

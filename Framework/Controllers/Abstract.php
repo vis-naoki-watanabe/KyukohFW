@@ -33,7 +33,7 @@ class Framework_Controllers_Abstract
             $property = '_'.$name;
             return $this->$property;
         }
-        else if( $name == 'user' ) {
+        else if( $name == 'user' || $name == 'viewer') {
             return $this->getUser();
         }
         else if( $name == 'paginator' ) {
@@ -45,7 +45,6 @@ class Framework_Controllers_Abstract
     public function getUser() { return $this->getViewer(); }
     public function getViewer()
     {
-        App::debug(get_class($this)."::line:".__LINE__);
         if(Auth::isLogin()) return Auth::getUser();
         return null;
     }
@@ -262,6 +261,20 @@ class Framework_Controllers_Abstract
         return dirname($ref->getFilename());
     }
 
+    public function sendRawJSON($list)
+    {
+        $this->sendJSON($list, array("raw_result"=>true));
+    }
+    
+    public function sendNgJSON($list)
+    {
+        $this->sendJSON(
+                array(
+                    "result" => "NG",
+                    "data" => $list
+                ), array("raw_result"=>true));
+    }
+    
     // JSON返却関連
     public function sendJSON( $list, $options = null )
     {
