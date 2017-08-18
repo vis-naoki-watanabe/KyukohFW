@@ -11,8 +11,7 @@ spl_autoload_register(function ($class_name)
     // $this_path = dirname(__FILE__).'/../';
     // FRAMEWORK_DIR:configで設定
     $this_path = FRAMEWORK_DIR.'/../';
-    
-    if ( strstr($class_name, 'Controller') && !strstr($class_name, 'Framework_') )
+    if ( !strstr($class_name, 'App_Controller') && strstr($class_name, 'Controller') && !strstr($class_name, 'Framework_') )
     {
         $class_path = str_replace('_', '/', $class_name).'.php';
         $virtual_path = $this_path."App/controllers/".$class_path;

@@ -10,6 +10,9 @@ class Framework_Controllers_Abstract
     protected $_user        = null;
     protected $_pagenator   = null;
     
+    // 認証を除外するcontroller,action
+    public $exclude_auth_action = null;
+    
     public function __construct($controller_name = null, $action_name = null)
     {
         $this->_controller  = $controller_name;
@@ -52,10 +55,11 @@ class Framework_Controllers_Abstract
     // App毎のAbstractControllerでコンストラクター後に
     public function init()
     {
-        // auth()メソッドがある場合は、auth():認証する
-        if(method_exists($this, 'auth')) {
-            $this->auth();
-        }
+    }
+    
+    // 通常は何もしない
+    public function auth()
+    {
     }
     
     public function getControllerName()
@@ -69,6 +73,9 @@ class Framework_Controllers_Abstract
     
     public function run($action)
     {
+        // 認証実行
+        $this->auth();
+        
         // ① App毎のAbstractControllerでターゲットAction前にやりたい処理
         $this->preDispatch();
         // ② App_Controller毎のターゲットAction前にやりたい処理
