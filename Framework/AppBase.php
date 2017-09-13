@@ -99,24 +99,6 @@ class AppBase
         return new Framework_Base_Exception( $message, $error_code );
     }
     
-    // {{{ public static function choose()
-
-    /**
-     * 配列内に指定したキーがあればその値を返却し、なければデフォルト値を返却する
-     * @param type $arr 調べる配列
-     * @param type $key キー
-     * @param type $default デフォルト値(デフォルト引数はnull)
-     */
-    public static function choose( $arr, $key, $default = null )
-    {
-        if ( is_array( $arr ) && array_key_exists( $key, $arr ) ) {
-            return $arr[$key];
-        }
-        return $default;
-    }
-
-    // }}}
-    
     // 不要文字除去or置換
     public static function strip($val, $flag = true)
     {
@@ -138,24 +120,6 @@ class AppBase
     }
 
     // }}}
-    
-    public static function serialize($data, $base64_flag = false)
-    {
-        $serialize = serialize($data);
-        if( $base64_flag ) {
-            $serialize = base64_encode($serialize);
-        }
-        return $serialize;
-    }
-    
-    public static function unserialize($serialize, $base64_flag = false)
-    {
-        if( $base64_flag ) {
-            $serialize = base64_decode($serialize);
-        }
-        $data = unserialize($serialize);
-        return $data;
-    }
     
     public static function isStg()
     {
@@ -752,5 +716,52 @@ class AppBase
             }
         }
         return $ret;
+    }
+    
+    // ================================================
+    //  汎用ツール系関連
+    // ================================================
+    // {{{ public static function choose( $arr, $key, $default = null )
+
+    /**
+     * 配列内に指定したキーがあればその値を返却し、なければデフォルト値を返却する
+     * @param type $arr 調べる配列
+     * @param type $key キー
+     * @param type $default デフォルト値(デフォルト引数はnull)
+     */
+    public static function choose( $arr, $key, $default = null )
+    {
+        if ( is_array( $arr ) && array_key_exists( $key, $arr ) ) {
+            return $arr[$key];
+        }
+        return $default;
+    }
+
+    // }}}
+    
+    public static function serialize($data, $base64_flag = false)
+    {
+        $serialize = serialize($data);
+        if( $base64_flag ) {
+            $serialize = base64_encode($serialize);
+        }
+        return $serialize;
+    }
+    
+    public static function unserialize($serialize, $base64_flag = false)
+    {
+        if( $base64_flag ) {
+            $serialize = base64_decode($serialize);
+        }
+        $data = unserialize($serialize);
+        return $data;
+    }
+    
+    public static function http_build_query($array, $url=null)
+    {
+        $query = http_build_query($array);
+        $url = $url?($url.((strpos($url,'?')===false)?'?':'&')):"";
+        $url.= $query;
+        return $url;
     }
 }

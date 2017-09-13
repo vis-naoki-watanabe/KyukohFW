@@ -121,6 +121,19 @@ class Framework_Model_Abstract extends Model
 
     // }}}
     
+    public static $_db_list_order = null;
+    public static function setOrder($type, $fields)
+    {
+        if($type === null) {
+            static::$_db_list_order = null;
+            return;
+        }
+        if(!is_array(self::$_db_list_order)) {
+            static::$_db_list_order = array();
+        }
+        static::$_db_list_order[$type] = $fields;
+    }
+    
     private static function setOptions(&$orm, $options)
     {
         if( $options ) {
@@ -153,6 +166,14 @@ class Framework_Model_Abstract extends Model
                 foreach($options['where_gte'] as $field => $value) {
                     App::debug($field."::".$value);
                     $orm->where_gte($field, $value);
+                }
+            }
+            
+            if(static::$_db_list_order) {
+                foreach(static::$_db_list_order as $type => $fields) {
+                    if(!array_key_exists($type, $options) && $fields !== null) {
+                        $options[$type] = $fields;
+                    }
                 }
             }
             

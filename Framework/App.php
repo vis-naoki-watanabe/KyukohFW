@@ -23,7 +23,7 @@ spl_autoload_register(function ($class_name)
 	// Util系のライブラリの走査パス
 	$arr = explode('_',$class_name);
 	if( $arr[0] == 'App' ) {
-            $virtual_path = $this_path.str_replace('App','App/models',$class_path);
+            $virtual_path = $this_path.preg_replace('/^App/','App/models',$class_path);
         } else if( $arr[0] == 'Framework' ) {
             $virtual_path = $this_path.$class_path;    
         } else {
@@ -32,7 +32,6 @@ spl_autoload_register(function ($class_name)
 	//echo "[[autoload: path:".$virtual_path."]]";
 	$real_path = realpath($virtual_path);
     }
-
     if ( is_file($real_path) )
     {
         include $real_path;

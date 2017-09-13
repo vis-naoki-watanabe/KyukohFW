@@ -140,6 +140,19 @@ class Framework_Controllers_Abstract
         return $request->getRequest($key, $default);
     }
     
+    // リクエストを追加する
+    public function addRequest($array)
+    {
+        $request = Framework_Web_Application::getRequest(true);
+        Framework_Web_Application::addRequest($array);
+    }
+    
+    // リクエストを削除する
+    public function removeRequest($key)
+    {
+        Framework_Web_Application::removeRequest($key);
+    }
+    
     public function setRender($layout = null, $controller = null, $action = null)
     {
         if(!$this->_render) {

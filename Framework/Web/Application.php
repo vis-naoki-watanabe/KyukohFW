@@ -96,6 +96,32 @@ class Framework_Web_Application extends Framework_Base_Application
     }    
     // }}}
     
+    // {{{ public static function addRequest($array)
+    
+    /**
+     * リクエストを追加する
+     * @return void
+     */
+    public static function addRequest($array)
+    {
+        if( !self::$_request ) return null;
+        self::$_request->setRequest($array); 
+    }    
+    // }}}
+    
+    // {{{ public static function removeRequest($key)
+    
+    /**
+     * キーに合致するリクエストを削除
+     * @return void
+     */
+    public static function removeRequest($key)
+    {
+        if( !self::$_request ) return null;
+        self::$_request->removeRequest($key);
+    }    
+    // }}}
+    
     public static function setRequest($request)
     {
         self::$_request = $request;
