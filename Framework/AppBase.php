@@ -15,13 +15,24 @@ class AppBase
         return self::getConfig($key, true);
     }
     
+    // ,区切りでキー階層指定
     public static function getConfig( $key = null, $convert_object = false )
     {
         if(!$key) {
             $ret = self::$_config;
         }
         else {
-            $ret = App::choose(self::$_config, $key);
+            if(preg_match("/\//", $key)) {
+                $keys = explode("/",$key);
+                $ret = self::$_config;
+                foreach($keys as $key)
+                {
+                    $ret = App::choose($ret, $key);
+                }
+            }
+            else {
+                $ret = App::choose(self::$_config, $key);
+            }
         }
         
         if(is_array($ret) && $convert_object) {

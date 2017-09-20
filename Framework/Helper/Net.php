@@ -1,4 +1,5 @@
 <?php
+// TODO: Framework_Net_HttpClientにほぼ集約
 class Framework_Helper_Net
 {
     const CRLF_CODE = "\r\n";
@@ -227,6 +228,9 @@ class Framework_Helper_Net
      * @param array $options
      * @return bool 成功 or 失敗
      */
+    public static function post($options) {
+        return self::httpPost(@$options['url'], $options);
+    }
     public static function httpPost($url, array $options = array())
     {
         $params  = App::choose($options, 'params', array());            // 「送信する名前 => 送信する値」の形の連想配列
