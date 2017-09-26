@@ -35,7 +35,11 @@ class Framework_Base_Log
     public function dump( $message = '', $prefix = "", $log_file_name = 'debug' )
     {
         $filename = App::choose($this->_paths, $log_file_name);
-        if( !$filename ) return;
+        // configに無いログファイル名は、debug.logと同じパスに格納
+        if( !$filename ) {
+            //return;
+            $filename = str_replace('debug', $log_file_name, App::choose($this->_paths, 'debug'));
+        }
         $path = $this->_root_path . $filename;
         
         if( is_object($message) ) {
