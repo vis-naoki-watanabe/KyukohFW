@@ -8,7 +8,7 @@ class Framework_Base_Application
      * @return void
      */
     public function __construct()
-    {        
+    {
         // エラー出力設定
         $this->errorSetting();
                 

@@ -142,6 +142,11 @@ class AppBase
         return SERVER_TYPE == 'debug' || SERVER_TYPE == 'dev' || SERVER_TYPE == 'builder' || SERVER_TYPE == 'developer';
     }
     
+    public static function isBuilder()
+    {
+        returnSERVER_TYPE == 'builder';
+    }
+    
     const VIRTUAL_TIME_APP = 0;         // アプリの仮想日付
     const VIRTUAL_TIME_USER = 1;        // ユーザー毎の仮想日付
     public static function time($type = VIRTUAL_TIME_APP)
@@ -774,5 +779,10 @@ class AppBase
         $url = $url?($url.((strpos($url,'?')===false)?'?':'&')):"";
         $url.= $query;
         return $url;
+    }
+    
+    public static function access_log()
+    {
+        return @$_SERVER['REQUEST_METHOD']." ".@$_SERVER['REQUEST_URI'];
     }
 }

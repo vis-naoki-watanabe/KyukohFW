@@ -188,9 +188,13 @@ class Framework_Net_HttpClient
                             $params[$key] = $value;
             }
             curl_setopt( $this->curl_, CURLOPT_POST, 1 );
-            if ( is_array( $params ) && sizeof( $params ) > 0 ) {
-                    $post_data = http_build_query( $params );
-                    curl_setopt( $this->curl_, CURLOPT_POSTFIELDS, $post_data );
+            if(is_array($params)) {
+                if ( is_array( $params ) && sizeof( $params ) > 0 ) {
+                        $post_data = http_build_query( $params );
+                        curl_setopt( $this->curl_, CURLOPT_POSTFIELDS, $post_data );
+                }
+            } else {
+                curl_setopt( $this->curl_, CURLOPT_POSTFIELDS, $params );
             }
             curl_setopt( $this->curl_, CURLOPT_URL, $url );
             $this->url_ = $url;
@@ -313,8 +317,18 @@ class Framework_Net_HttpClient
      * @param $key
      * @param $value
      */
-    public function setRequestHeaders($key, $value)
+    public function setRequestHeaders($key, $value = null)
     {
+        $headers = $key;
+        if($headers && !is_array($headers)) {
+            $headers = array(
+                $key => $value
+            );
+        }
+        
+        foreach($headers as $header) {
+            list($key, $value) = $header;
+            
             // user-agentはcurl_setoptで設定するのでheaderからは抜く
             if ( strtolower( $key ) == 'user-agent') {
                     $this->setUserAgent( $value);
@@ -325,11 +339,13 @@ class Framework_Net_HttpClient
             } else {
                     $this->requestHeaders_[$key] = $value;
             }
-            // headerを組み立てなおす
-            $this->requestHeader_ = array();
-            foreach( $this->requestHeaders_ as $k => $v ) {
-                    $this->requestHeader_[] = "$k: $v";
-            }
+        }
+        
+        // headerを組み立てなおす
+        $this->requestHeader_ = array();
+        foreach( $this->requestHeaders_ as $k => $v ) {
+                $this->requestHeader_[] = "$k: $v";
+        }
     }
     // }}}
     // {{{ public function getDefaultParameters($key)

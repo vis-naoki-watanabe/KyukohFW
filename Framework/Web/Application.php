@@ -16,6 +16,10 @@ class Framework_Web_Application extends Framework_Base_Application
         // タイムゾーン
         date_default_timezone_set($this->getConfig('timezone'));
         
+        //ini_set("session.gc_probability", 0);
+        //ini_set("session.gc_divisor", 1000);
+        //ini_set("session.use_cookies", 0);
+        //ini_set("session.use_trans_sid", 1);
         session_start();
         
         $this->router();
