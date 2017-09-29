@@ -153,6 +153,11 @@ class Framework_Controllers_Abstract
         Framework_Web_Application::removeRequest($key);
     }
     
+    public function setActionRender($action)
+    {
+        $this->_render->setRender(null, null, $action);
+    }
+    
     public function setRender($layout = null, $controller = null, $action = null)
     {
         if(!$this->_render) {
