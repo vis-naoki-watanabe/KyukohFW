@@ -34,7 +34,7 @@ spl_autoload_register(function ($class_name)
     }
     if ( is_file($real_path) )
     {
-        include $real_path;
+        include_once $real_path;
     }
 });
 
