@@ -46,7 +46,7 @@ class Framework_Model_Abstract extends Model
         if( static::$delete_flags && !$force ) {
             $options['where'] = array_merge(App::choose($options,'where',array()), static::$delete_flags);
         }
-                
+        
         // クラス名取得
         $class_name = get_called_class();
 
@@ -58,7 +58,7 @@ class Framework_Model_Abstract extends Model
         self::setOptions( $orm, $options );
         $obj = $id?$orm->find_one($id):$orm->find_one();
         
-        if( $obj ) {            
+        if( $obj ) {
             $obj->init();
             
             /* Instance時のキャッシュ作成は、一時中止：用途が決まったら復活
@@ -564,7 +564,7 @@ class Framework_Model_Abstract extends Model
         if(!$this->orm) return array();
         
         $json = $this->orm->get('params');
-
+        
         $obj = $json?json_decode($json, $to_array):null;
         if(!$key || !$obj) return $obj;
         

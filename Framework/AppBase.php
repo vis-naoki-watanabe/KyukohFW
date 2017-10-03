@@ -105,6 +105,11 @@ class AppBase
         self::$_log->sql($query, $time, $options);
     }
     
+    public static function throw_ex( $message, $error_code = null )
+    {
+        throw self::ex($message, $error_code);
+    }
+    
     public static function ex( $message, $error_code = null )
     {
         return new Framework_Base_Exception( $message, $error_code );

@@ -248,9 +248,11 @@ class Framework_Controllers_Abstract
                 $ret['params'][$new_key] = $val;
             }
 	}
+        /*
         if(isset($ret['params'])) {
             $ret['params'] = App::raw_json_encode( $ret['params'] );
         }
+         */
 	return $ret;
     }
     
