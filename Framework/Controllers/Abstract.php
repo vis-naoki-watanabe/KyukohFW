@@ -1,14 +1,16 @@
 <?php
 class Framework_Controllers_Abstract
 {   
-    protected $_default_action = 'index';
-    protected $_variable    = null;
-    protected $_render      = null;
+    protected $_default_action  = 'index';
+    protected $_variable        = null;
+    protected $_render          = null;
     
-    protected $_controller  = null;      /* string */
-    protected $_action      = null;      /* string */
-    protected $_user        = null;
-    protected $_pagenator   = null;
+    protected $_controller      = null;      /* string */
+    protected $_action          = null;      /* string */
+    protected $_user            = null;
+    protected $_pagenator       = null;
+    protected $_error           = null;
+    protected $_error_layout    = array();
     
     // 認証を除外するcontroller,action
     public $exclude_auth_action = null;
@@ -36,20 +38,52 @@ class Framework_Controllers_Abstract
             $property = '_'.$name;
             return $this->$property;
         }
-        else if( $name == 'user' || $name == 'viewer') {
-            return $this->getUser();
-        }
-        else if( $name == 'paginator' ) {
-            return $this->getPaginator();
+        /*
+         * 固有メソッド
+         */
+        else if($name == 'user' || 
+                $name == 'viewer' || 
+                $name == 'paginator' || 
+                $name == 'error'
+        ) {
+            $method = 'get'.ucfirst($name);
+            return $this->$method();
         }
         return $this->getVariable();
     }
     
+    /*
+     * 固有メソッド
+     */
     public function getUser() { return $this->getViewer(); }
     public function getViewer()
     {
         if(Auth::isLogin()) return Auth::getUser();
         return null;
+    }
+    
+    public function getPaginator()
+    {
+        if(!$this->_pagenator) {
+            $this->_pagenator = new Framework_Web_Paginator();
+        }
+        return $this->_pagenator;
+    }
+    
+    public function getError()
+    {
+        if(!$this->_error) {
+            $this->_error = new Framework_Web_Error();
+        }
+        return $this->_error;
+    }
+    
+    public function getVariable()
+    {
+        if(!$this->_variable) {
+            $this->_variable = new Framework_Web_Variable();
+        }
+        return $this->_variable;
     }
         
     // App毎のAbstractControllerでコンストラクター後に
@@ -84,7 +118,7 @@ class Framework_Controllers_Abstract
         try {
             $this->$action();
         } catch (Framework_Base_Exception $e) {
-            echo "[".$e->getErrorCode()."]".$e->getMessage();
+            $this->error_render($e);
         }
         // ④ App_Controller毎のターゲットAction後にやりたい処理
         $this->actionAfter();
@@ -177,13 +211,43 @@ class Framework_Controllers_Abstract
     public function render($action = null, $controller = null)
     {
         $this->_variable->paginator = $this->getPaginator();
+        $this->_variable->error = $this->getError();
+        
+        $this->_variable->controller = $this->controller;       // viewで元のcontroller名を参照する場合：途中で置き換わった場合はorg_controllerで取り出す
+        $this->_variable->action = $this->action;               // viewで元のaction名を参照する場合：途中で置き換わった場合はorg_actionで取り出す
         
         $this->_render->setVariable($this->_variable);
         $this->_render->render($action, $controller);
     }
     
-    public function redirect($path)
+    // 表示：エラー画面
+    public function setErrorLayout($layout)
     {
+        /*$layout = [
+            'container'  => '',
+            'controller' => '',
+            'action'     => ''
+        ];*/
+        $this->_error_layout = $layout;
+    }
+    public function error_render($exception)
+    {
+        $this->_variable->error = $this->getError();
+        $this->_variable->exception = $exception;
+        
+        $this->_variable->controller = $this->controller;       // viewで元のcontroller名を参照する場合：途中で置き換わった場合はorg_controllerで取り出す
+        $this->_variable->action = $this->action;               // viewで元のaction名を参照する場合：途中で置き換わった場合はorg_actionで取り出す
+        
+        $this->_render->setVariable($this->_variable);
+        $this->setRender(@$this->_error_layout['container'],@$this->_error_layout['controller'], @$this->_error_layout['action']);
+        $this->_render->render();
+    }
+    
+    public function redirect($path, $query = null)
+    {
+        if($query && is_array($query)) {
+            $path.= '?'.http_build_query($query);
+        }
         header('Location: '.$path);
         exit;
     }
@@ -254,22 +318,6 @@ class Framework_Controllers_Abstract
         }
          */
 	return $ret;
-    }
-    
-    public function getVariable()
-    {
-        if(!$this->_variable) {
-            $this->_variable = new Framework_Web_Variable();
-        }
-        return $this->_variable;
-    }
-    
-    public function getPaginator()
-    {
-        if(!$this->_pagenator) {
-            $this->_pagenator = new Framework_Web_Paginator();
-        }
-        return $this->_pagenator;
     }
     
     // 継承元のクラスを返す

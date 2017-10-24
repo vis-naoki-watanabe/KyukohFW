@@ -22,6 +22,7 @@ class AppBase
             $ret = self::$_config;
         }
         else {
+            /*
             if(preg_match("/\//", $key)) {
                 $keys = explode("/",$key);
                 $ret = self::$_config;
@@ -32,7 +33,8 @@ class AppBase
             }
             else {
                 $ret = App::choose(self::$_config, $key);
-            }
+            }*/
+            $ret = App::choose(self::$_config, $key);
         }
         
         if(is_array($ret) && $convert_object) {
@@ -211,6 +213,7 @@ class AppBase
 
     public static function CSRF_generate()
     {
+        App::debug("session_id:".session_id());
         if (session_id() == '') {
             //throw new \BadMethodCallException('Session is not active.');
             App::debug('Session is not active.');
@@ -752,6 +755,29 @@ class AppBase
      */
     public static function choose( $arr, $key, $default = null )
     {
+        if(preg_match("/\//", $key)) {
+            $keys = explode("/",$key);
+        } else {
+            $keys = array($key);
+        }
+        
+        $flag = true;
+        $ret = $arr;
+        foreach($keys as $key)
+        {
+            if ( $ret && is_array( $ret ) && array_key_exists( $key, $ret ) ) {
+                $ret = $ret[$key];
+            } else {
+                $flag = false;
+            }
+        }
+        
+        return $flag?$ret:$default;
+    }
+    
+    //以前のアルゴリズム
+    public static function choose_( $arr, $key, $default = null )
+    {    
         if ( is_array( $arr ) && array_key_exists( $key, $arr ) ) {
             return $arr[$key];
         }

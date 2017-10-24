@@ -1,7 +1,15 @@
 <?php
-class Framework_Base_Error
+class Framework_Base_Error extends Framework_Model_AbstractSimple
 {
-    protected $message_ = null;
+    protected $_id = null;
+    protected $_message = null;
+    protected $_params = null;
+    
+    public function __construct($id, $message)
+    {
+        $this->_id = $id;
+        $this->_message = $message;
+    }
     
     // エラーハンドラ関数
     public function myErrorHandler($errno, $errstr, $errfile, $errline)
@@ -34,14 +42,35 @@ class Framework_Base_Error
             break;
         }
         
-        $this->message_ = $message;
+        $this->_message = $message;
 
         /* PHP の内部エラーハンドラを実行しません */
         return false;
     }
     
+    public function setId($id)
+    {
+        $this->_id = $id;
+    }
+    public function setMessage($message)
+    {
+        $this->_message = $message;
+    }
+    public function setParams($params)
+    {
+        $this->_params = $params;
+    }
+    public function getId()
+    {
+        return $this->_id;
+    }
+    
     public function getMessage()
     {
-        return $this->message_;
+        return $this->_message;
+    }
+    public function getParams()
+    {
+        return $this->_params;
     }
 }

@@ -36,7 +36,6 @@ class Framework_Snippet
 	 */
 	public static function &getInstance( $name )
 	{
-            App::debug("snippet:{$name}");
 		if ( ! isset( self::$snippet[$name] ) ) {
                     self::$snippet[$name] = new self( $name );
 		}

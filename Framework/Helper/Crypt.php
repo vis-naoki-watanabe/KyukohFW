@@ -119,7 +119,9 @@ class Framework_Helper_Crypt
             //キーID取得
             $key_id = self::main( $params, substr($str, 0, 1), $params['keys'][0], 1);
             //複合化
-            $ret = self::main( $params, substr($str, 1, strlen($str)-1), $params['keys'][$key_id], 1);
+            if(@$params['keys'][$key_id]) {
+                $ret = self::main( $params, substr($str, 1, strlen($str)-1), $params['keys'][$key_id], 1);
+            }
         }
 
         return $ret;

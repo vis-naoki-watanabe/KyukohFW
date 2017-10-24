@@ -539,6 +539,10 @@ class xFramework_Model/// implements IteratorAggregate
 
     public function hasData()
     {
+        return $thi->exists();
+    }
+    public function exists()
+    {
         return $this->id && $this->id != '' && $this->id > 0;
     }
 }

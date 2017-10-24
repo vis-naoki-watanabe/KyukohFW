@@ -9,9 +9,10 @@ class Framework_Web_Auth
         $user_class = static::USER_CLASS;
         
         $login_flag = false;
+        $id_key = preg_match('/@/', $uid)?'email':'uid';
 
         $options = array(
-            'uid' => $uid,
+            $id_key => $uid,
             'password' => md5($password)
         );
         $user = $user_class::getInstance($options);

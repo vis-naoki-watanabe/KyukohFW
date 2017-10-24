@@ -150,6 +150,8 @@ class Framework_Web_Application extends Framework_Base_Application
         $controller = new $controller_name($this->getController(), $this->getAction());
 
         $controller->setRender(Framework_Web_Render::getDefaultLayout(), $this->getController(true), $this->getAction());
+        // エラー画面用
+        $controller->setErrorLayout(Framework_Web_Render::getErrorLayout());
         $controller->run($action_name);
     }
     
