@@ -15,12 +15,25 @@ class AppBase
         return self::getConfig($key, true);
     }
     
+    // ,区切りでキー階層指定
     public static function getConfig( $key = null, $convert_object = false )
     {
         if(!$key) {
             $ret = self::$_config;
         }
         else {
+            /*
+            if(preg_match("/\//", $key)) {
+                $keys = explode("/",$key);
+                $ret = self::$_config;
+                foreach($keys as $key)
+                {
+                    $ret = App::choose($ret, $key);
+                }
+            }
+            else {
+                $ret = App::choose(self::$_config, $key);
+            }*/
             $ret = App::choose(self::$_config, $key);
         }
         
@@ -94,28 +107,15 @@ class AppBase
         self::$_log->sql($query, $time, $options);
     }
     
+    public static function throw_ex( $message, $error_code = null )
+    {
+        throw self::ex($message, $error_code);
+    }
+    
     public static function ex( $message, $error_code = null )
     {
         return new Framework_Base_Exception( $message, $error_code );
     }
-    
-    // {{{ public static function choose()
-
-    /**
-     * 配列内に指定したキーがあればその値を返却し、なければデフォルト値を返却する
-     * @param type $arr 調べる配列
-     * @param type $key キー
-     * @param type $default デフォルト値(デフォルト引数はnull)
-     */
-    public static function choose( $arr, $key, $default = null )
-    {
-        if ( is_array( $arr ) && isset( $arr[$key] ) ) {
-            return $arr[$key];
-        }
-        return $default;
-    }
-
-    // }}}
     
     // 不要文字除去or置換
     public static function strip($val, $flag = true)
@@ -139,24 +139,6 @@ class AppBase
 
     // }}}
     
-    public static function serialize($data, $base64_flag = false)
-    {
-        $serialize = serialize($data);
-        if( $base64_flag ) {
-            $serialize = base64_encode($serialize);
-        }
-        return $serialize;
-    }
-    
-    public static function unserialize($serialize, $base64_flag = false)
-    {
-        if( $base64_flag ) {
-            $serialize = base64_decode($serialize);
-        }
-        $data = unserialize($serialize);
-        return $data;
-    }
-    
     public static function isStg()
     {
         return SERVER_TYPE == 'stg' || SERVER_TYPE == 'staging';
@@ -165,6 +147,11 @@ class AppBase
     public static function isDev()
     {
         return SERVER_TYPE == 'debug' || SERVER_TYPE == 'dev' || SERVER_TYPE == 'builder' || SERVER_TYPE == 'developer';
+    }
+    
+    public static function isBuilder()
+    {
+        returnSERVER_TYPE == 'builder';
     }
     
     const VIRTUAL_TIME_APP = 0;         // アプリの仮想日付
@@ -226,6 +213,7 @@ class AppBase
 
     public static function CSRF_generate()
     {
+        App::debug("session_id:".session_id());
         if (session_id() == '') {
             //throw new \BadMethodCallException('Session is not active.');
             App::debug('Session is not active.');
@@ -400,6 +388,13 @@ class AppBase
     {
         $flags = $flag?0:PREG_SPLIT_NO_EMPTY;
         return preg_split('/(\r\n|\n|\r)/', $target, -1, $flags);
+    }
+    
+    public static function explode($sep, $val)
+    {
+        if($val === null) return null;
+        $val = str_replace(" ", "", $val);
+        return explode($sep, $val);
     }
 
     /*
@@ -648,4 +643,177 @@ class AppBase
        $root = realpath(FRAMEWORK_DIR.'/../');
        return sprintf('%s/%s', $root, $path);
    }
+   
+   /**
+    * 
+    * 正規表現でUserAgent分岐/OS
+    * 
+    * @param string $user_agent
+    * @return string
+    */
+   public static function getOs($user_agent = '')
+   {
+       if (empty($user_agent)) {
+           // ユーザエージェント
+           $user_agent = $_SERVER['HTTP_USER_AGENT'];
+       }
+
+       if (preg_match('/Windows NT 10.0/', $user_agent)) {
+           //$os = 'Windows 10';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 6.3/', $user_agent)) {
+           //$os = 'Windows 8.1 / Windows Server 2012 R2';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 6.2/', $user_agent)) {
+           //$os = 'Windows 8 / Windows Server 2012';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 6.1/', $user_agent)) {
+           //$os = 'Windows 7 / Windows Server 2008 R2';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 6.0/', $user_agent)) {
+           //$os = 'Windows Vista / Windows Server 2008';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 5.2/', $user_agent)) {
+           //$os = 'Windows XP x64 Edition / Windows Server 2003';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 5.1/', $user_agent)) {
+           //$os = 'Windows XP';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 5.0/', $user_agent)) {
+           //$os = 'Windows 2000';
+           $os = 'Windows';
+       } elseif (preg_match('/Windows NT 4.0/', $user_agent)) {
+           $os = 'Microsoft Windows NT 4.0'; 
+       } elseif (preg_match('/Mac OS X ([0-9\._]+)/', $user_agent, $matches)) {
+           //$os = 'Macintosh Intel ' . str_replace('_', '.', $matches[1]);
+           $os = 'Macintosh';
+       } elseif (preg_match('/OS ([a-z0-9_]+)/', $user_agent, $matches)) {
+           //$os = 'iOS ' . str_replace('_', '.', $matches[1]);
+           $os = 'iOS';
+       } elseif (preg_match('/Android ([a-z0-9\.]+)/', $user_agent, $matches)) {
+           //$os = 'Android ' . $matches[1];
+           $os = 'Android';
+       } elseif (preg_match('/Linux ([a-z0-9_]+)/', $user_agent, $matches)) {
+           //$os = 'Linux ' . $matches[1];
+           $os = 'Linux';
+       } else {
+           $os = 'unidentified';
+       }
+
+       return $os;
+   }
+   
+    public static function isNumeric($num)
+    {
+        return is_numeric($num);
+    }
+
+    public static function isInt($num)
+    {
+        return (is_numeric($num) && intval($num)==$num);
+    }
+
+    public static function isFloat($num)
+    {
+        return (is_numeric($num) && floatval($num)==$num);
+    }
+    
+    public static function filterArray($array, $allow_field_string = 'all', $default = null)
+    {
+        // 全て返却
+        if($allow_field_string == 'all') return $array;
+        // 指定フィールドがないので$defaultを返却
+        if(!$allow_field_string) return $default;
+
+        if(is_array($allow_field_string)) {
+            $allow_fields = $allow_field_string;
+        } else {
+            $allow_fields = explode(',', $allow_field_string);
+        }
+        
+        $ret = array();
+        if($allow_fields && is_array($allow_fields)) {
+            foreach($allow_fields as $id => $key) {
+                if(array_key_exists($key, $array)) {
+                    $ret[$key] = $array[$key];
+                }
+            }
+        }
+        return $ret;
+    }
+    
+    // ================================================
+    //  汎用ツール系関連
+    // ================================================
+    // {{{ public static function choose( $arr, $key, $default = null )
+
+    /**
+     * 配列内に指定したキーがあればその値を返却し、なければデフォルト値を返却する
+     * @param type $arr 調べる配列
+     * @param type $key キー
+     * @param type $default デフォルト値(デフォルト引数はnull)
+     */
+    public static function choose( $arr, $key, $default = null )
+    {
+        if(preg_match("/\//", $key)) {
+            $keys = explode("/",$key);
+        } else {
+            $keys = array($key);
+        }
+        
+        $flag = true;
+        $ret = $arr;
+        foreach($keys as $key)
+        {
+            if ( $ret && is_array( $ret ) && array_key_exists( $key, $ret ) ) {
+                $ret = $ret[$key];
+            } else {
+                $flag = false;
+            }
+        }
+        
+        return $flag?$ret:$default;
+    }
+    
+    //以前のアルゴリズム
+    public static function choose_( $arr, $key, $default = null )
+    {    
+        if ( is_array( $arr ) && array_key_exists( $key, $arr ) ) {
+            return $arr[$key];
+        }
+        return $default;
+    }
+
+    // }}}
+    
+    public static function serialize($data, $base64_flag = false)
+    {
+        $serialize = serialize($data);
+        if( $base64_flag ) {
+            $serialize = base64_encode($serialize);
+        }
+        return $serialize;
+    }
+    
+    public static function unserialize($serialize, $base64_flag = false)
+    {
+        if( $base64_flag ) {
+            $serialize = base64_decode($serialize);
+        }
+        $data = unserialize($serialize);
+        return $data;
+    }
+    
+    public static function http_build_query($array, $url=null)
+    {
+        $query = http_build_query($array);
+        $url = $url?($url.((strpos($url,'?')===false)?'?':'&')):"";
+        $url.= $query;
+        return $url;
+    }
+    
+    public static function access_log()
+    {
+        return @$_SERVER['REQUEST_METHOD']." ".@$_SERVER['REQUEST_URI'];
+    }
 }

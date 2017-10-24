@@ -10,6 +10,11 @@ class Framework_Web_Render
     {
         return App::choose(App::getConfig('views'), 'default_layout');
     }
+    
+    public static function getErrorLayout()
+    {
+        return App::choose(App::getConfig('views'), 'error_layout', array());
+    }
 
     public function __construct( $layout, $controller = null, $action = null )
     {
@@ -53,7 +58,19 @@ class Framework_Web_Render
     
     public function __get( $name )
     {
-        if(!$this->_variable) {
+        if($name == 'org_action') {
+            return $this->_variable->action;
+        }
+        else if($name == 'org_controller') {
+            return $this->_variable->controller;
+        }
+        else if($name == 'action') {
+            return $this->_action;
+        }
+        else if($name == 'controller') {
+            return $this->_controller;
+        }
+        else if(!$this->_variable) {
             $this->_variable = new Framework_Web_Variable();
         }
         return $this->_variable->$name;

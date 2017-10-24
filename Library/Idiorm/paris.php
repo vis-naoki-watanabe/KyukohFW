@@ -621,6 +621,11 @@
             return $this->orm === null;
         }
         
+        public function exists()
+        {
+            return $this->orm !== null;
+        }
+        
         //public function 
     }
     class ParisMethodMissingException extends Exception {}

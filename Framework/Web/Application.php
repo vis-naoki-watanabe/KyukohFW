@@ -16,6 +16,10 @@ class Framework_Web_Application extends Framework_Base_Application
         // タイムゾーン
         date_default_timezone_set($this->getConfig('timezone'));
         
+        //ini_set("session.gc_probability", 0);
+        //ini_set("session.gc_divisor", 1000);
+        //ini_set("session.use_cookies", 0);
+        //ini_set("session.use_trans_sid", 1);
         session_start();
         
         $this->router();
@@ -96,6 +100,32 @@ class Framework_Web_Application extends Framework_Base_Application
     }    
     // }}}
     
+    // {{{ public static function addRequest($array)
+    
+    /**
+     * リクエストを追加する
+     * @return void
+     */
+    public static function addRequest($array)
+    {
+        if( !self::$_request ) return null;
+        self::$_request->setRequest($array); 
+    }    
+    // }}}
+    
+    // {{{ public static function removeRequest($key)
+    
+    /**
+     * キーに合致するリクエストを削除
+     * @return void
+     */
+    public static function removeRequest($key)
+    {
+        if( !self::$_request ) return null;
+        self::$_request->removeRequest($key);
+    }    
+    // }}}
+    
     public static function setRequest($request)
     {
         self::$_request = $request;
@@ -120,6 +150,8 @@ class Framework_Web_Application extends Framework_Base_Application
         $controller = new $controller_name($this->getController(), $this->getAction());
 
         $controller->setRender(Framework_Web_Render::getDefaultLayout(), $this->getController(true), $this->getAction());
+        // エラー画面用
+        $controller->setErrorLayout(Framework_Web_Render::getErrorLayout());
         $controller->run($action_name);
     }
     

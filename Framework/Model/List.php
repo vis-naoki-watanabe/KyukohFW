@@ -64,7 +64,7 @@ class Framework_Model_List implements IteratorAggregate
 	 */
 	public function add( $model )
 	{
-		if ( is_object( $model ) && get_class( $model ) == 'Framework_Model_List' ) {
+		if ( is_object( $model ) && $model instanceof Framework_Model_List ) {
 			foreach ( $model as $v ) {
 				$this->models_[] = $v;
 				if ( ! $this->lock_total_count_ ) $this->total_count_++;
@@ -365,12 +365,12 @@ class Framework_Model_List implements IteratorAggregate
         {
             $closure = function( $obj ) use ( $key, $val ) {
                 if( !is_array($key) ) {
-                    return ($obj->$key == $val);
+                    return (property_exists($obj,$key) && $obj->$key == $val);
                 } else {
                     $arr = $key;
                     $flag = true;
                     foreach( $arr as $key => $val ) {
-                        if($obj->$key != $val) $flag = false;
+                        if(property_exists($obj,$key) && $obj->$key != $val) $flag = false;
                     }
                     return $flag;
                 }

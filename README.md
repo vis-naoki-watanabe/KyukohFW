@@ -1,5 +1,5 @@
 # KyukohFW
-PHP FrameWork by Kyukoh
+PHP FrameWork by Kyukoh(Tohru Ochiai)
 
 # 更新履歴
 

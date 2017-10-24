@@ -69,6 +69,18 @@ class Framework_Web_Request
 	}
 	$this->request['request'] = $params;
     }
+    
+    public function removeRequest($target_key)
+    {
+	$params = App::choose( $this->request, 'request' );
+        $new_params = array();
+	foreach( $params as $key => $val )
+	{
+            if($target_key === $key) {App::debug("removed");continue;}
+	    $new_params[$key] = $val;
+	}
+	$this->request['request'] = $new_params; 
+    }
 
     public function getKey( $value = null )
     {

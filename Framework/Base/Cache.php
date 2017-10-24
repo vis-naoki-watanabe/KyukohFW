@@ -50,11 +50,9 @@ class Framework_Base_Cache
     
     public function set( $cache_id, $val )
     {
-        App::debug($this->options);
 	$cache=new Cache_Lite($this->options);
         $cache->setLifeTime($this->cache_life_time);
         //App::debug("save cache life time:".$this->cache_life_time);
-        App::debug($val);
 	$cache->save( $val );
 	
 	$cache_data=$cache->get($cache_id);

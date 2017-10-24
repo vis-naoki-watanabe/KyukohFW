@@ -1,5 +1,5 @@
 <?php
-class AssetController extends AbstructController
+class AssetController extends AbstractController
 {
     public function actionBefore()
     {

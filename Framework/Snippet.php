@@ -36,7 +36,6 @@ class Framework_Snippet
 	 */
 	public static function &getInstance( $name )
 	{
-            App::debug("snippet:{$name}");
 		if ( ! isset( self::$snippet[$name] ) ) {
                     self::$snippet[$name] = new self( $name );
 		}
@@ -340,4 +339,70 @@ class Framework_Snippet
 	}
 
 	// }}}
+
+    // {{{ public function isSelected($array, $selected, $prop = null)
+
+    /**
+     * checkbox, radio, selectの選択中の要素を判定
+     * @param	$array
+     * @param   $selected
+     * @param   $prop
+     * @return	boolean
+     * ==================================================
+       'options' => array(
+            array(
+                'label' => 'AAA',
+                'value' => 'aaa',
+            ),
+            array(
+                'label' => 'BBB',
+                'value' => 'bbb',
+            ),
+            array(
+                'label' => 'CCC',
+                'value' => 'ccc',
+            ),
+        ),
+        'checked' => 'ccc'
+     * ==================================================
+     or 
+     * ==================================================
+        'options' => array(
+            array(
+                'label' => 'AAA',
+                'value' => 'aaa',
+            ),
+            array(
+                'label' => 'BBB',
+                'value' => 'bbb',
+                'checked' => true
+            ),
+            array(
+                'label' => 'CCC',
+                'value' => 'ccc',
+            ),
+        ),
+     * ==================================================
+     */
+    public function isSelected($array, $selected)
+    {
+        $props = array(
+            'selected',
+            'checked'
+        );
+
+        $is_selected = false;
+
+        foreach($props as $prop) {
+            if($selected && $selected == @$array['value']) {
+                $is_selected = true;
+            }
+            if(array_key_exists($prop, $array)) {
+                $is_selected = @$array[$prop];
+            }    
+        }
+        return $is_selected;
+    }
+
+    // }}}
 }
